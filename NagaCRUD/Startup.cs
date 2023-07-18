@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NagaCRUD.Models.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +26,13 @@ namespace NagaCRUD
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            // services needed for the application will be declared here    
+            services.AddDbContext<DatabaseContext>(options =>
+           options.UseSqlServer(Configuration.GetConnectionString("conn")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // this section is called midddleware
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -50,7 +56,7 @@ namespace NagaCRUD
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Person}/{action=Index}/{id?}");
             });
         }
     }
